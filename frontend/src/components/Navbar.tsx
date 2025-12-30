@@ -7,7 +7,7 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-gray-200/60 bg-white/70 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 w-full border-b  bg-black backdrop-blur-xl">
       <div className="mx-auto flex h-18 items-center justify-between px-6">
 
         {/* Logo */}
@@ -36,9 +36,9 @@ export default function Navbar() {
                     ${
                       active
                         ? "text-blue-600"
-                        : "text-gray-600 hover:text-blue-600"
+                        : "text-white hover:text-blue-600"
                     }
-                    hover:-translate-y-[1px] hover:bg-blue-50/60
+                    hover:-translate-y-[1px] hover:bg-blue-950
                   `}
                 >
                   {item.name}
