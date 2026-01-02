@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Sparkles, Star, Award, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+  const navigate = useNavigate(); // Initialize navigation
+
+
   const heroSlides = [
     {
       image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
@@ -11,7 +15,7 @@ const HomePage = () => {
       subtitle: "Handcrafted elegance for your home",
       accentColor: "from-amber-500 to-orange-500"
     },
-   
+
   ];
 
   useEffect(() => {
@@ -35,9 +39,8 @@ const HomePage = () => {
         {heroSlides.map((slide, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              currentSlide === index ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100' : 'opacity-0'
+              }`}
             style={{
               backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${slide.image}')`,
               backgroundSize: 'cover',
@@ -72,31 +75,34 @@ const HomePage = () => {
 
           {/* Subtitle */}
           <p className="text-xl lg:text-2xl text-white/90 mb-10 max-w-2xl leading-relaxed">
-            Discover our exclusive collection of handcrafted mirrors and natural shell decor. 
+            Discover our exclusive collection of handcrafted mirrors and natural shell decor.
             Each piece tells a story of craftsmanship and natural beauty.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 mb-12">
-            <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-full hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/25 hover:-translate-y-1">
-              <span className="flex items-center gap-2">
+            {/* Enhanced Explore Collection Button */}
+            <Button
+              onClick={() => navigate("/products")}
+              className="group relative px-10 py-6 font-semibold rounded-full overflow-hidden text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+            >
+              {/* Animated gradient overlay */}
+              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/20 to-white/10 opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-full animate-pulse-slow"></span>
+
+              {/* Button text and arrow */}
+              <span className="relative flex items-center gap-3">
                 Explore Collection
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 animate-bounce-slow group-hover:translate-x-3 transition-transform duration-500" />
               </span>
-            </button>
-            
-            <button className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-              <span className="flex items-center gap-2">
-                Book Consultation
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-              </span>
-            </button>
+            </Button>
+           
           </div>
+
 
           {/* Features */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 group"
               >
@@ -118,11 +124,10 @@ const HomePage = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              currentSlide === index 
-                ? 'w-8 bg-white' 
-                : 'bg-white/50 hover:bg-white/80'
-            }`}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${currentSlide === index
+              ? 'w-8 bg-white'
+              : 'bg-white/50 hover:bg-white/80'
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
@@ -131,7 +136,7 @@ const HomePage = () => {
       {/* Decorative Elements */}
       <div className="absolute top-20 right-10 w-32 h-32 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-10 w-40 h-40 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-full blur-3xl" />
-      
+
       {/* Scroll Indicator */}
       <div className="absolute bottom-4 right-6 animate-bounce">
         <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
