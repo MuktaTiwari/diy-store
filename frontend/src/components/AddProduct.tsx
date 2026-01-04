@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+const MAX_IMAGES = 5;
 
 interface ProductProps {
   open: boolean;
@@ -26,12 +27,17 @@ export default function AddProduct({ open, onClose, categories }: ProductProps) 
     category_id: "",
   });
 
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    setImages(Array.from(e.target.files));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,9 +52,14 @@ export default function AddProduct({ open, onClose, categories }: ProductProps) 
       data.append("stock", formData.stock);
       data.append("category_id", formData.category_id);
 
-      if (image) data.append("image", image);
+      // 🔥 append multiple images
+      images.forEach((img) => {
+        data.append("images", img); // backend: images[]
+      });
 
-      await axios.post("http://localhost:5000/api/products/create", data);
+      await axios.post("http://localhost:5000/api/products/create", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       onClose();
       window.location.reload();
@@ -63,7 +74,9 @@ export default function AddProduct({ open, onClose, categories }: ProductProps) 
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="bg-white rounded-xl max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Add New Product</DialogTitle>
+          <DialogTitle className="text-xl font-bold">
+            Add New Product
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,7 +103,10 @@ export default function AddProduct({ open, onClose, categories }: ProductProps) 
               className="w-full rounded-md border px-3 py-2 text-sm"
               value={formData.category_id}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, category_id: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  category_id: e.target.value,
+                }))
               }
               required
             >
@@ -103,14 +119,30 @@ export default function AddProduct({ open, onClose, categories }: ProductProps) 
             </select>
           </div>
 
+          {/* 🔥 MULTIPLE IMAGE UPLOAD */}
           <div>
-            <Label>Image</Label>
+            <Label>Product Images</Label>
             <Input
               type="file"
               accept="image/*"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
+              multiple
+              onChange={handleImageChange}
             />
           </div>
+
+          {/* 🔥 IMAGE PREVIEW */}
+          {images.length > 0 && (
+            <div className="grid grid-cols-4 gap-2 mt-2">
+              {images.map((img, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(img)}
+                  alt="preview"
+                  className="h-20 w-full object-cover rounded-md border"
+                />
+              ))}
+            </div>
+          )}
 
           <DialogFooter className="pt-4">
             <DialogClose asChild>
